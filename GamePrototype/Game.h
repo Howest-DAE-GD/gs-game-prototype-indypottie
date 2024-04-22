@@ -1,5 +1,9 @@
 #pragma once
 #include "BaseGame.h"
+#include "ColonistTaskManager.h"
+#include "Colonist.h"
+#include <vector>
+
 class Game : public BaseGame
 {
 public:
@@ -27,4 +31,10 @@ private:
 	void Initialize();
 	void Cleanup( );
 	void ClearBackground( ) const;
+
+
+	
+	std::vector<Colonist*> m_ColonistVector;
+	
+	ColonistTaskManager* m_ColonistTaskManager;
 };

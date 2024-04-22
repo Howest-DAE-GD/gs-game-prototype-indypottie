@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Game.h"
+#include "Colonist.h"
 
 Game::Game( const Window& window ) 
 	:BaseGame{ window }
@@ -14,15 +15,30 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
+	for (int index{ 0 }; index < 10; ++index)
+	{
+		m_ColonistVector.push_back(new Colonist(Point2f(float(index + 10), float(index + 10))));
+	}
 	
+	m_ColonistTaskManager = new ColonistTaskManager(m_ColonistVector);
 }
 
 void Game::Cleanup( )
 {
+	for (Colonist* colonist : m_ColonistVector)
+	{
+		delete colonist;
+	}
+
+	delete m_ColonistTaskManager;
 }
 
 void Game::Update( float elapsedSec )
 {
+	for (Colonist* colonist : m_ColonistVector)
+	{
+		colonist->Update(elapsedSec);
+	}
 	// Check keyboard state
 	//const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
 	//if ( pStates[SDL_SCANCODE_RIGHT] )
@@ -38,6 +54,11 @@ void Game::Update( float elapsedSec )
 void Game::Draw( ) const
 {
 	ClearBackground( );
+
+	for (Colonist* colonist : m_ColonistVector)
+	{
+		colonist->Draw();
+	}
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -47,20 +68,20 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
-	//std::cout << "KEYUP event: " << e.keysym.sym << std::endl;
-	//switch ( e.keysym.sym )
-	//{
-	//case SDLK_LEFT:
-	//	//std::cout << "Left arrow key released\n";
-	//	break;
-	//case SDLK_RIGHT:
-	//	//std::cout << "`Right arrow key released\n";
-	//	break;
-	//case SDLK_1:
-	//case SDLK_KP_1:
-	//	//std::cout << "Key 1 released\n";
-	//	break;
-	//}
+	switch ( e.keysym.sym )
+	{
+	case SDLK_w:
+		m_ColonistTaskManager->TryToIncreaseWoodcutters();
+		break;
+
+	case SDLK_f:
+		m_ColonistTaskManager->TryToIncreaseFarmers();
+		break;
+
+	case SDLK_g:
+		m_ColonistTaskManager->TryToIncreaseGuards();
+		break;
+	}
 }
 
 void Game::ProcessMouseMotionEvent( const SDL_MouseMotionEvent& e )
