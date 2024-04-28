@@ -1,20 +1,25 @@
 #include "pch.h"
 #include "Colonist.h"
 
-Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_TargetLocation{ 350.f, 300.f }, m_CurrentTask { ColonistTasks::Wandering }
+Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_TargetLocation{ 350.f, 300.f }, m_CurrentTask { ColonistTasks::Wandering }, m_IsAtTargetPoint{ false }, m_IsWandering { true }
 {
 	// nothing to do 
+
+	m_ColonistCircle.center  = m_Location;
+	m_ColonistCircle.radius = m_DRAW_COLONIST_RADIUS;
 }
 
 void Colonist::Update(float elapsedSec)
 {
-	PathToTargetPoint(elapsedSec);
+	m_IsAtTargetPoint = PathToTargetPoint(elapsedSec);
+
+	m_ColonistCircle.center = m_Location;
 }
 
 void Colonist::Draw() const
 {
 	utils::SetColor(m_COLONIST_COLOR);
-	utils::DrawEllipse(m_Location, m_DRAW_COLONIST_RADIUS_X, m_DRAW_COLONIST_RADIUS_Y);
+	utils::DrawEllipse(m_ColonistCircle.center, m_ColonistCircle.radius, m_ColonistCircle.radius);
 }
 
 void Colonist::SetLocation(const Point2f& newLocation)
@@ -27,6 +32,11 @@ void Colonist::SetNewTargetLocation(const Point2f& newTargetLocation)
 	m_TargetLocation = newTargetLocation;
 }
 
+void Colonist::SetIsWandering(bool IsWandering)
+{
+	m_IsWandering = IsWandering;
+}
+
 void Colonist::SetCurrentTask(const ColonistTasks& newTask)
 {
 	m_CurrentTask = newTask;
@@ -37,30 +47,65 @@ Colonist::ColonistTasks Colonist::GetCurrentTask()
 	return m_CurrentTask;
 }
 
+bool Colonist::GetIsAtTargetPoint() const
+{
+	return m_IsAtTargetPoint;
+}
+
 bool Colonist::PathToTargetPoint(float elapsedSec)
 {
-	if (m_Location.x != m_TargetLocation.x or m_Location.y != m_TargetLocation.y)
+	if (!m_IsWandering)
 	{
-		if (m_Location.x > m_TargetLocation.x)
+		if (!utils::IsPointInCircle(m_TargetLocation, m_ColonistCircle))
 		{
-			m_Location.x -= m_COLONIST_SPEED.x;
-		}
-		else if (m_Location.x < m_TargetLocation.x)
-		{
-			m_Location.x += m_COLONIST_SPEED.x;
+			if (m_Location.x > m_TargetLocation.x)
+			{
+				m_Location.x -= m_COLONIST_SPEED.x;
+			}
+			else if (m_Location.x < m_TargetLocation.x)
+			{
+				m_Location.x += m_COLONIST_SPEED.x;
+			}
+
+			if (m_Location.y > m_TargetLocation.y)
+			{
+				m_Location.y -= m_COLONIST_SPEED.y;
+			}
+			else if (m_Location.y < m_TargetLocation.y)
+			{
+				m_Location.y += m_COLONIST_SPEED.y;
+			}
+
+			return false;
 		}
 
-		if (m_Location.y > m_TargetLocation.y)
-		{
-			m_Location.y -= m_COLONIST_SPEED.y;
-		}
-		else if (m_Location.y < m_TargetLocation.y)
-		{
-			m_Location.y += m_COLONIST_SPEED.y;
-		}
-		
-		return false;
+		return true;
 	}
+	else
+	{
+		if (!utils::IsPointInCircle(m_TargetLocation, m_ColonistCircle))
+		{
+			if (m_Location.x > m_TargetLocation.x)
+			{
+				m_Location.x -= m_COLONIST_WANDERING_SPEED.x;
+			}
+			else if (m_Location.x < m_TargetLocation.x)
+			{
+				m_Location.x += m_COLONIST_WANDERING_SPEED.x;
+			}
 
-	return true;
+			if (m_Location.y > m_TargetLocation.y)
+			{
+				m_Location.y -= m_COLONIST_WANDERING_SPEED.y;
+			}
+			else if (m_Location.y < m_TargetLocation.y)
+			{
+				m_Location.y += m_COLONIST_WANDERING_SPEED.y;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
 }

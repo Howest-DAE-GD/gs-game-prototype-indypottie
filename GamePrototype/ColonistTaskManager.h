@@ -7,24 +7,30 @@ class ColonistTaskManager
 {
 public:
 
-	ColonistTaskManager(const std::vector<Colonist*>& colonistVector);
+	ColonistTaskManager(const std::vector<Colonist*>& colonistVector, float screenW, float screenH);
 
 	// general methods
 	void DivideTasks();
-	
+	void UpdateTasks();
+
 	// getters
+	int GetAmountOfWoodCutters() const;
+	int GetAmountOfFarmers() const;
+	int GetAmountOfGuards() const;
+	int GetAmountOfWanderers() const;
 
 	// setters
 	void TryToIncreaseWoodcutters();
 	void TryToIncreaseFarmers();
 	void TryToIncreaseGuards();
 
+	void TryToDecreaseWoodcutters();
+	void TryToDecreaseFarmers();
+	void TryToDecreaseGuards();
+
 	/*void SetTasks(const int& woodCutters, const int& farmers, const int& guards, const int& wanderers);*/
 
 private:
-	void SetWoodCutters(const int& newAmountOfWoodCutters);
-	void SetFarmers(const int& newAmountOfFarmers);
-	void SetGuards(const int& newAmountOfGuards);
 
 	struct TaskDivider
 	{
@@ -34,6 +40,12 @@ private:
 		int wandering	{};
 	};
 
+
+	float m_ScreenW;
+	float m_ScreenH;
+
+	float m_RandomNewLocationX;
+	float m_RandomNewLocationY;
 	
 
 	TaskDivider m_TaskDivider;

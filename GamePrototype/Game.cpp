@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Game.h"
 #include "Colonist.h"
+#include <iostream>
 
 Game::Game( const Window& window ) 
 	:BaseGame{ window }
@@ -15,22 +16,28 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
-	for (int index{ 0 }; index < 10; ++index)
+	ShowControlsInConsole();
+
+	for (int index{ 0 }; index < 9; ++index)
 	{
 		m_ColonistVector.push_back(new Colonist(Point2f(float(index + 10), float(index + 10))));
 	}
 	
-	m_ColonistTaskManager = new ColonistTaskManager(m_ColonistVector);
+	m_ColonistTaskManager = new ColonistTaskManager(m_ColonistVector,GetViewPort().width,GetViewPort().height);
+
+	m_GameUI = new UserInterface();
 }
 
 void Game::Cleanup( )
 {
+	delete m_GameUI;
+
+	delete m_ColonistTaskManager;
+
 	for (Colonist* colonist : m_ColonistVector)
 	{
 		delete colonist;
 	}
-
-	delete m_ColonistTaskManager;
 }
 
 void Game::Update( float elapsedSec )
@@ -39,6 +46,8 @@ void Game::Update( float elapsedSec )
 	{
 		colonist->Update(elapsedSec);
 	}
+
+	m_ColonistTaskManager->UpdateTasks();
 	// Check keyboard state
 	//const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
 	//if ( pStates[SDL_SCANCODE_RIGHT] )
@@ -53,12 +62,15 @@ void Game::Update( float elapsedSec )
 
 void Game::Draw( ) const
 {
-	ClearBackground( );
+	ClearBackground();
+	
 
 	for (Colonist* colonist : m_ColonistVector)
 	{
 		colonist->Draw();
 	}
+
+	m_GameUI->Draw(m_ColonistTaskManager->GetAmountOfWoodCutters(), m_ColonistTaskManager->GetAmountOfFarmers(), m_ColonistTaskManager->GetAmountOfGuards(), m_ColonistTaskManager->GetAmountOfWanderers());
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -80,6 +92,19 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 
 	case SDLK_g:
 		m_ColonistTaskManager->TryToIncreaseGuards();
+		break;
+
+
+	case SDLK_s:
+		m_ColonistTaskManager->TryToDecreaseWoodcutters();
+		break;
+
+	case SDLK_r:
+		m_ColonistTaskManager->TryToDecreaseFarmers();
+		break;
+
+	case SDLK_t:
+		m_ColonistTaskManager->TryToDecreaseGuards();
 		break;
 	}
 }
@@ -126,6 +151,12 @@ void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 
 void Game::ClearBackground( ) const
 {
-	glClearColor( 0.0f, 0.0f, 0.3f, 1.0f );
+	
+	glClearColor(0.32f, 0.48f, 0.28f, 1.f);
 	glClear( GL_COLOR_BUFFER_BIT );
+}
+
+void Game::ShowControlsInConsole() const
+{
+	std::cout << "--- CONTROLS ---" << std::endl << "INCREASE/DECREASE WOODCUTTERS: W / S" << std::endl << "INCREASE/DECREASE FARMERS: F / R" << std::endl << "INCREASE/DECREASE GUARDS: G / T" << std::endl << "-------------" << std::endl << std::endl;
 }
