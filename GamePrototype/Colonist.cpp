@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "Colonist.h"
 
-Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_TargetLocation{ 350.f, 300.f }, m_CurrentTask { ColonistTasks::Wandering }, m_IsAtTargetPoint{ false }, m_IsWandering { true }
+Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_CurrentTask{ ColonistTasks::Wandering }, m_IsAtTargetPoint{ false }, m_IsWandering{ true }, m_TargetLocation(startingLocation)
 {
-	// nothing to do 
-
 	m_ColonistCircle.center  = m_Location;
 	m_ColonistCircle.radius = m_DRAW_COLONIST_RADIUS;
 }
@@ -19,7 +17,7 @@ void Colonist::Update(float elapsedSec)
 void Colonist::Draw() const
 {
 	utils::SetColor(m_COLONIST_COLOR);
-	utils::DrawEllipse(m_ColonistCircle.center, m_ColonistCircle.radius, m_ColonistCircle.radius);
+	utils::FillEllipse(m_ColonistCircle.center, m_ColonistCircle.radius, m_ColonistCircle.radius);
 }
 
 void Colonist::SetLocation(const Point2f& newLocation)

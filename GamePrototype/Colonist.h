@@ -41,7 +41,7 @@ public:
 
 	const Vector2f  m_COLONIST_WANDERING_SPEED	{  0.2f, 0.2f };
 
-	const Color4f	m_COLONIST_COLOR			{ 0.3f,0.5f,1.f,1.f };
+	const Color4f	m_COLONIST_COLOR			{ 0.95f, 0.76f, 0.49f,1.f };
 
 private:
 	// private methods

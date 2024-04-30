@@ -20,12 +20,14 @@ void Game::Initialize( )
 
 	for (int index{ 0 }; index < 9; ++index)
 	{
-		m_ColonistVector.push_back(new Colonist(Point2f(float(index + 10), float(index + 10))));
+		m_ColonistVector.push_back(new Colonist(Point2f(GetViewPort().width / 2, GetViewPort().height / 2)));
 	}
 	
 	m_ColonistTaskManager = new ColonistTaskManager(m_ColonistVector,GetViewPort().width,GetViewPort().height);
 
 	m_GameUI = new UserInterface();
+
+	m_MapPtr = new Map(GetViewPort().width, GetViewPort().height);
 }
 
 void Game::Cleanup( )
@@ -38,6 +40,8 @@ void Game::Cleanup( )
 	{
 		delete colonist;
 	}
+
+	delete m_MapPtr;
 }
 
 void Game::Update( float elapsedSec )
@@ -69,6 +73,9 @@ void Game::Draw( ) const
 	{
 		colonist->Draw();
 	}
+
+	m_MapPtr->Draw();
+
 
 	m_GameUI->Draw(m_ColonistTaskManager->GetAmountOfWoodCutters(), m_ColonistTaskManager->GetAmountOfFarmers(), m_ColonistTaskManager->GetAmountOfGuards(), m_ColonistTaskManager->GetAmountOfWanderers());
 }

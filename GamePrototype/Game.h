@@ -5,6 +5,7 @@
 #include "Colonist.h"
 #include "UserInterface.h"
 #include <vector>
+#include "Map.h"
 
 class Game : public BaseGame
 {
@@ -36,7 +37,7 @@ private:
 
 	void ShowControlsInConsole( ) const;
 
-
+	Map* m_MapPtr;
 	
 	std::vector<Colonist*> m_ColonistVector;
 	
