@@ -12,6 +12,8 @@ public:
 
 	// general methods
 	void Draw() const;
+
+
 	
 
 	
@@ -19,7 +21,8 @@ public:
 
 
 private:
-
+	// private methods
+	void DrawTree(const Point2f& location) const;
 
 	std::vector<Rectf> m_Buildings;
 };

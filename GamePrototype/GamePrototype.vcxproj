@@ -149,17 +149,17 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
   <ItemGroup>
     <ClCompile Include="Colonist.cpp" />
     <ClCompile Include="ColonistTaskManager.cpp" />
+    <ClCompile Include="Colony.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainClass.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Colonist.h" />
     <ClInclude Include="ColonistTaskManager.h" />
+    <ClInclude Include="Colony.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="MainClass.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>

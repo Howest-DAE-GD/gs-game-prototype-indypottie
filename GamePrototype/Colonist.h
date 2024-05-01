@@ -44,8 +44,20 @@ public:
 	const Color4f	m_COLONIST_COLOR			{ 0.95f, 0.76f, 0.49f,1.f };
 
 private:
+	// structs and enums
+
+	struct ColonistInventory
+	{
+		int wood;
+		int food;
+	};
+
 	// private methods
 	bool PathToTargetPoint(float elapsedSec);
+
+
+
+	ColonistInventory m_ColonistInventory;
 
 	bool m_IsAtTargetPoint;
 	bool m_IsWandering;

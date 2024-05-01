@@ -1,11 +1,8 @@
 #pragma once
 #include "BaseGame.h"
 #include "utils.h"
-#include "ColonistTaskManager.h"
-#include "Colonist.h"
-#include "UserInterface.h"
-#include <vector>
-#include "Map.h"
+#include "Colony.h"
+
 
 class Game : public BaseGame
 {
@@ -35,13 +32,5 @@ private:
 	void Cleanup( );
 	void ClearBackground( ) const;
 
-	void ShowControlsInConsole( ) const;
-
-	Map* m_MapPtr;
-	
-	std::vector<Colonist*> m_ColonistVector;
-	
-	ColonistTaskManager* m_ColonistTaskManager;
-
-	UserInterface* m_GameUI;
+	Colony* m_ColonyPtr;
 };

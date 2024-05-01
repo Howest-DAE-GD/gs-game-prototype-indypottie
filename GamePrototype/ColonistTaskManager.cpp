@@ -2,7 +2,7 @@
 #include <iostream>
 #include "ColonistTaskManager.h"
 
-ColonistTaskManager::ColonistTaskManager(const std::vector<Colonist*>& colonistVector, float screenW, float screenH) : m_TotalAssignedColonists { 0 }, m_ScreenW { screenW }, m_ScreenH{ screenH }
+ColonistTaskManager::ColonistTaskManager(const std::vector<Colonist*>& colonistVector, float screenW, float screenH) : m_TotalAssignedColonists { 0 }, m_ScreenW { screenW }, m_ScreenH{ screenH }, m_AccumulatedSeconds{ 0 }
 {
 	m_RandomNewLocationX = float(rand() % int(m_ScreenW));
 	m_RandomNewLocationY = float(rand() % int(m_ScreenH));
@@ -58,8 +58,10 @@ void ColonistTaskManager::DivideTasks()
 	std::cout << "COLONISTS ASSIGNED: " << m_TotalAssignedColonists << std::endl << std::endl;
 }
 
-void ColonistTaskManager::UpdateTasks()
+void ColonistTaskManager::UpdateTasks(float elapsedSec)
 {
+	m_AccumulatedSeconds += elapsedSec;
+
 	for (Colonist* colonist : m_ColonistVector)
 	{
 
@@ -68,7 +70,16 @@ void ColonistTaskManager::UpdateTasks()
 
 		case Colonist::ColonistTasks::WoodCutting:
 
-			;
+			if (m_AccumulatedSeconds >= 2.f)
+			{
+				
+				m_AccumulatedSeconds = 0;
+
+				m_AccumulatedWood += 1;
+
+				std::cout << "wood added" << std::endl;
+			}
+			
 			break;
 
 		case Colonist::ColonistTasks::Farming:
@@ -240,4 +251,10 @@ void ColonistTaskManager::TryToDecreaseGuards()
 	}
 
 	return;
+}
+
+int ColonistTaskManager::AddWoodToInventory()
+{
+	return m_AccumulatedWood;
+	m_AccumulatedWood = 0;
 }

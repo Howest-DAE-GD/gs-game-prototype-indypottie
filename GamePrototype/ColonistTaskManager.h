@@ -11,7 +11,7 @@ public:
 
 	// general methods
 	void DivideTasks();
-	void UpdateTasks();
+	void UpdateTasks(float elapsedSec);
 
 	// getters
 	int GetAmountOfWoodCutters() const;
@@ -28,7 +28,7 @@ public:
 	void TryToDecreaseFarmers();
 	void TryToDecreaseGuards();
 
-	/*void SetTasks(const int& woodCutters, const int& farmers, const int& guards, const int& wanderers);*/
+	int AddWoodToInventory();
 
 private:
 
@@ -40,6 +40,10 @@ private:
 		int wandering	{};
 	};
 
+	int m_AccumulatedWood;
+
+
+	float m_AccumulatedSeconds;
 
 	float m_ScreenW;
 	float m_ScreenH;

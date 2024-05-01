@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Colonist.h"
 
-Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_CurrentTask{ ColonistTasks::Wandering }, m_IsAtTargetPoint{ false }, m_IsWandering{ true }, m_TargetLocation(startingLocation)
+Colonist::Colonist(const Point2f& startingLocation) : m_Location{ startingLocation }, m_CurrentTask{ ColonistTasks::Wandering }, m_IsAtTargetPoint{ false }, m_IsWandering{ true }, m_TargetLocation(startingLocation), m_ColonistInventory{ 0 , 0 }
 {
 	m_ColonistCircle.center  = m_Location;
 	m_ColonistCircle.radius = m_DRAW_COLONIST_RADIUS;
