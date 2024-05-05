@@ -2,8 +2,11 @@
 #include <iostream>
 #include "ColonistTaskManager.h"
 
-ColonistTaskManager::ColonistTaskManager(const std::vector<Colonist*>& colonistVector, float screenW, float screenH) : m_TotalAssignedColonists { 0 }, m_ScreenW { screenW }, m_ScreenH{ screenH }, m_AccumulatedSeconds{ 0 }
+ColonistTaskManager::ColonistTaskManager(const std::vector<Colonist*>& colonistVector, float screenW, float screenH) : m_TotalAssignedColonists{ 0 }, m_ScreenW{ screenW }, m_ScreenH{ screenH }, m_AccumulatedSeconds{ 0 }, m_WoodToDeliver{ 0 }, m_AccumulatedWood{ 0 }
 {
+	m_MainBuildingLocation.x = screenW / 2;
+	m_MainBuildingLocation.y = screenH / 2;
+
 	m_RandomNewLocationX = float(rand() % int(m_ScreenW));
 	m_RandomNewLocationY = float(rand() % int(m_ScreenH));
 
@@ -32,21 +35,26 @@ void ColonistTaskManager::DivideTasks()
 
 		case Colonist::ColonistTasks::WoodCutting:
 
-			colonist->SetNewTargetLocation(Point2f(500.f, 50.f));
+			//colonist->SetNewTargetLocation(Point2f(500.f, 50.f));
 			break;
 
 		case Colonist::ColonistTasks::Farming:
 
-			colonist->SetNewTargetLocation(Point2f(20.f, 270.f));
+			//colonist->SetNewTargetLocation(Point2f(20.f, 270.f));
 			break;
 
 		case Colonist::ColonistTasks::Guarding:
 
-			colonist->SetNewTargetLocation(Point2f(20.f, 270.f));
+			//colonist->SetNewTargetLocation(Point2f(20.f, 270.f));
 			break;
 
 		case Colonist::ColonistTasks::Wandering:
 
+			break;
+
+		case Colonist::ColonistTasks::DeliveringResources:
+
+			//colonist->SetNewTargetLocation(m_MainBuildingLocation);
 			break;
 
 		default:
@@ -70,15 +78,15 @@ void ColonistTaskManager::UpdateTasks(float elapsedSec)
 
 		case Colonist::ColonistTasks::WoodCutting:
 
-			if (m_AccumulatedSeconds >= 2.f)
-			{
-				
-				m_AccumulatedSeconds = 0;
+			//if (m_AccumulatedSeconds >= 10.f)
+			//{
+			//	m_AccumulatedSeconds = 0;
+			//	m_AccumulatedWood += 1;
 
-				m_AccumulatedWood += 1;
-
-				std::cout << "wood added" << std::endl;
-			}
+			//	colonist->SetCurrentTask(Colonist::ColonistTasks::DeliveringResources);
+			//	
+			//	DivideTasks();
+			//}
 			
 			break;
 
@@ -107,6 +115,18 @@ void ColonistTaskManager::UpdateTasks(float elapsedSec)
 
 			break;
 
+		case Colonist::ColonistTasks::DeliveringResources:
+
+			//if (colonist->GetIsAtTargetPoint())
+			//{
+			//	m_WoodToDeliver += m_AccumulatedWood;
+
+			//	colonist->SetCurrentTask(Colonist::ColonistTasks::WoodCutting);
+
+			//	DivideTasks();
+			//}
+			break;
+
 		default:
 			break;
 		}
@@ -131,6 +151,11 @@ int ColonistTaskManager::GetAmountOfGuards() const
 int ColonistTaskManager::GetAmountOfWanderers() const
 {
 	return m_TaskDivider.wandering;
+}
+
+int ColonistTaskManager::AddWoodToInventory()
+{
+	return m_WoodToDeliver;
 }
 
 void ColonistTaskManager::TryToIncreaseWoodcutters()
@@ -251,10 +276,4 @@ void ColonistTaskManager::TryToDecreaseGuards()
 	}
 
 	return;
-}
-
-int ColonistTaskManager::AddWoodToInventory()
-{
-	return m_AccumulatedWood;
-	m_AccumulatedWood = 0;
 }

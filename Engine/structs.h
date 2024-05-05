@@ -17,6 +17,9 @@ struct Point2f
 	Point2f( );
 	explicit Point2f( float x, float y );
 
+	bool operator == (const Point2f& P);
+	bool operator != (const Point2f& P);
+
 	float x;
 	float y;
 };

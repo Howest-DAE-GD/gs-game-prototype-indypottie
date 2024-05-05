@@ -24,6 +24,27 @@ Point2f::Point2f( float x, float y )
 {
 }
 
+bool Point2f::operator==(const Point2f& P)
+{
+	if (x == P.x && y == P.y)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Point2f::operator!=(const Point2f& P)
+{
+	if(operator ==(P))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
 //-----------------------------------------------------------------
 // Rectf Constructors
 //-----------------------------------------------------------------

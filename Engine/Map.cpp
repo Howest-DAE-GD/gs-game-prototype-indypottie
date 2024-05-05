@@ -15,7 +15,7 @@ Map::Map(float screenW, float screenH)
 
 void Map::Draw() const
 {
-
+	utils::SetColor(Color4f(0.50f, 0.31f, 0.14f, 1.f));
 	for (Rectf building : m_Buildings)
 	{
 		utils::FillRect(building);

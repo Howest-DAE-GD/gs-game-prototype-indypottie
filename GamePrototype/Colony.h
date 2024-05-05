@@ -7,6 +7,11 @@
 #include <iostream>
 #include <vector>
 
+class Colonist;
+class ColonistTaskManager;
+class UserInterface;
+class Map;
+
 class Colony
 {
 public:
@@ -23,7 +28,7 @@ public:
 	void ProcessKeyUpEvent(const SDL_KeyboardEvent& e);
 
 	//setters
-	void AddWoodToInventory(int WoodToAdd);
+	void AddResourcesToColonyInventory(const int& wood, const int& food);
 
 	//getters
 

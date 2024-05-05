@@ -73,9 +73,12 @@ void Colony::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 	}
 }
 
-void Colony::AddWoodToInventory(int WoodToAdd)
+void Colony::AddResourcesToColonyInventory(const int& wood, const int& food)
 {
-	m_ColonyInventory.wood += WoodToAdd;
+	m_ColonyInventory.wood += wood;
+	m_ColonyInventory.food += food;
+
+	std::cout << "Current Wood: " << m_ColonyInventory.wood << std::endl << "Current Food: " << m_ColonyInventory.food << std::endl;
 }
 
 void Colony::InitializeColony()
@@ -84,7 +87,7 @@ void Colony::InitializeColony()
 
 	for (int index{ 0 }; index < m_AmountOfColonists; ++index)
 	{
-		m_ColonistVectorPtr.push_back(new Colonist(Point2f(m_ScreenWidth / 2, m_ScreenHeight / 2)));
+		m_ColonistVectorPtr.push_back(new Colonist(Point2f(m_ScreenWidth / 2, m_ScreenHeight / 2), this));
 	}
 
 	m_ColonistTaskManagerPtr = new ColonistTaskManager(m_ColonistVectorPtr, m_ScreenWidth, m_ScreenHeight);

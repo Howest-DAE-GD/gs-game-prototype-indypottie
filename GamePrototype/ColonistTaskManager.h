@@ -1,7 +1,9 @@
 #pragma once
 #include "Colonist.h"
+#include "utils.h"
 #include <vector>
 
+class Colonist;
 
 class ColonistTaskManager
 {
@@ -19,6 +21,8 @@ public:
 	int GetAmountOfGuards() const;
 	int GetAmountOfWanderers() const;
 
+	int AddWoodToInventory();
+
 	// setters
 	void TryToIncreaseWoodcutters();
 	void TryToIncreaseFarmers();
@@ -28,19 +32,23 @@ public:
 	void TryToDecreaseFarmers();
 	void TryToDecreaseGuards();
 
-	int AddWoodToInventory();
+	// constants
+
+
 
 private:
 
 	struct TaskDivider
 	{
-		int woodCutting	{};
-		int farming		{};
-		int guarding	{};
-		int wandering	{};
+		int woodCutting			{};
+		int farming				{};
+		int guarding			{};
+		int wandering			{};
+		int deliveringResources	{};
 	};
 
 	int m_AccumulatedWood;
+	int m_WoodToDeliver;
 
 
 	float m_AccumulatedSeconds;
@@ -58,5 +66,7 @@ private:
 	int m_TotalAssignedColonists;
 
 	std::vector<Colonist*> m_ColonistVector;
+
+	Point2f m_MainBuildingLocation;
 };
 
