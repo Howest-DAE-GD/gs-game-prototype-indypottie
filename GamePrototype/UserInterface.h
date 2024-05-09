@@ -39,6 +39,8 @@ private:
 	Texture* m_GuardsStringTexturePtr;
 	Texture* m_WanderersStringTexturePtr;
 
+	
+
 	std::vector<Texture*> m_Numbers;
 };
 

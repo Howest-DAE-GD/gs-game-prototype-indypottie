@@ -1,26 +1,22 @@
 #include "Map.h"
 
-Map::Map(float screenW, float screenH)
+Map::Map(float screenW, float screenH) : m_ScreenWidth{ screenW }, m_ScreenHeight{ screenH }
 {
-	Rectf mainBuilding{};
+	m_MainBuildingTexturePtr = new Texture("MainBuilding.png");
+	m_FarmTexturePtr		 = new Texture("Farm.png");
+}
 
-	mainBuilding.width  = 100.f;
-	mainBuilding.height = 80.f;
-
-	mainBuilding.left   = (screenW / 2) - mainBuilding.width / 2;
-	mainBuilding.bottom = (screenH / 2) - mainBuilding.height / 2;
-
-	m_Buildings.push_back(mainBuilding);
+Map::~Map()
+{
+	delete m_FarmTexturePtr;
+	delete m_MainBuildingTexturePtr;
 }
 
 void Map::Draw() const
 {
-	utils::SetColor(Color4f(0.50f, 0.31f, 0.14f, 1.f));
-	for (Rectf building : m_Buildings)
-	{
-		utils::FillRect(building);
-	}
-
+	m_MainBuildingTexturePtr->Draw(Point2f(m_ScreenWidth / 2 - (m_MainBuildingTexturePtr->GetWidth() / 2), m_ScreenHeight / 2 - (m_MainBuildingTexturePtr->GetHeight() / 2)));
+	
+	m_FarmTexturePtr->Draw(Point2f(20.f, 270.f));
 
 	DrawTree(Point2f(500.f, 50.f));
 }

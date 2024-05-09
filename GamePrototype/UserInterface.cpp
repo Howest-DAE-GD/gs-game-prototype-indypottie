@@ -43,6 +43,9 @@ void UserInterface::InitializeUI()
 
 	m_TaskDividerRect.width	 = 300.f;
 	m_TaskDividerRect.height = 150.f;
+	
+
+	
 }
 
 void UserInterface::DrawTaskDividerRect(const int& currentWoodCutters, const int& currentFarmers, const int& currentGuards, const int& currentWanderers) const

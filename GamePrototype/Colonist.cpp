@@ -199,9 +199,9 @@ void Colonist::HandleCurrentTask(float elapsedSec)
 
 		if (!m_IsAtTaskLocation)
 		{
-			if (GetCurrentTargetPoint() != Point2f(20.f, 270.f))
+			if (GetCurrentTargetPoint() != Point2f(100.f, 300.f))
 			{
-				SetNewTargetLocation(Point2f(20.f, 270.f));
+				SetNewTargetLocation(Point2f(100.f, 300.f));
 			}
 		}
 
