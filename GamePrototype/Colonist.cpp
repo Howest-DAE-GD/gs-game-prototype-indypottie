@@ -2,7 +2,7 @@
 #include "Colonist.h"
 #include <iostream>
 
-Colonist::Colonist(const Point2f& startingLocation, Colony* colony) : m_Location{ startingLocation }, m_Colony{ colony }, m_CurrentTask{ ColonistTasks::Wandering }, m_PreviousTask{ ColonistTasks::Wandering }, m_IsAtTargetPoint { false }, m_IsWandering{ true }, m_TargetLocation(startingLocation), m_ColonistInventory{ 0 , 0 }, m_DeliveringResources{ false }, m_CurrentPatrolPointIndex{0}, m_ColonistColor{ 0.95f, 0.76f, 0.49f,1.f }
+Colonist::Colonist(const Point2f& startingLocation, Colony* colony, bool isZombie) : m_Location{ startingLocation }, m_Colony{ colony }, m_CurrentTask{ ColonistTasks::Wandering }, m_PreviousTask{ ColonistTasks::Wandering }, m_IsAtTargetPoint { false }, m_IsWandering{ true }, m_TargetLocation(startingLocation), m_ColonistInventory{ 0 , 0 }, m_DeliveringResources{ false }, m_CurrentPatrolPointIndex{0}, m_ColonistColor{ 0.95f, 0.76f, 0.49f,1.f }, IsZombie{ false }
 {
 	m_MainBuildingLocation = startingLocation;
 
@@ -15,6 +15,11 @@ Colonist::Colonist(const Point2f& startingLocation, Colony* colony) : m_Location
 	m_PatrolPoints.push_back(Point2f(startingLocation.x - 70.f, startingLocation.y - 60.f));
 	m_PatrolPoints.push_back(Point2f(startingLocation.x + 70.f, startingLocation.y - 60.f));
 	m_PatrolPoints.push_back(Point2f(startingLocation.x + 70.f, startingLocation.y + 60.f));
+
+	if (IsZombie)
+	{
+		SetCurrentTask(ColonistTasks::EatingBrains);
+	}
 }
 
 Colonist::~Colonist()
@@ -170,6 +175,18 @@ void Colonist::HandleCurrentTask(float elapsedSec)
 
 	switch (m_CurrentTask)
 	{
+
+	case ColonistTasks::EatingBrains:
+		m_ColonistColor = Color4f(0.00f, 0.50f, 0.00f, 1.f);
+
+		if (!m_IsAtTaskLocation)
+		{
+			if (GetCurrentTargetPoint() != m_PatrolPoints[0])
+			{
+				SetNewTargetLocation(m_PatrolPoints[0]);
+			}
+		}
+
 	case Colonist::ColonistTasks::WoodCutting:
 		m_ColonistColor = Color4f(0.74f, 0.28f, 0.29f, 1.f);
 
@@ -288,3 +305,4 @@ void Colonist::PatrolGuard()
 	m_IsAtTaskLocation = false;
 
 }
+

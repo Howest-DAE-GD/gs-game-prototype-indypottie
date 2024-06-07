@@ -8,7 +8,7 @@ class Colony;
 class Colonist
 {
 public:
-	Colonist(const Point2f& startingLocation, Colony* colony);
+	Colonist(const Point2f& startingLocation, Colony* colony, bool isZombie);
 	~Colonist();
 
 	enum class ColonistTasks
@@ -17,7 +17,9 @@ public:
 		Farming,
 		Guarding,
 		Wandering,
-		DeliveringResources
+		DeliveringResources,
+
+		EatingBrains,
 	};
 
 	// general methods
@@ -65,6 +67,7 @@ private:
 		int food;
 	};
 
+
 	// private methods
 	bool PathToTargetPoint(float elapsedSec);
 
@@ -99,5 +102,9 @@ private:
 	bool m_IsAtTaskLocation{ false };
 
 	Color4f	m_ColonistColor;
+
+
+
+	bool IsZombie;
 };
 

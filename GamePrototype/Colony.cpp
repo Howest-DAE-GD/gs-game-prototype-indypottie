@@ -87,7 +87,7 @@ void Colony::InitializeColony()
 
 	for (int index{ 0 }; index < m_AmountOfColonists; ++index)
 	{
-		m_ColonistVectorPtr.push_back(new Colonist(Point2f(m_ScreenWidth / 2, m_ScreenHeight / 2), this));
+		m_ColonistVectorPtr.push_back(new Colonist(Point2f(m_ScreenWidth / 2, m_ScreenHeight / 2), this,false));
 	}
 
 	m_ColonistTaskManagerPtr = new ColonistTaskManager(m_ColonistVectorPtr, m_ScreenWidth, m_ScreenHeight);

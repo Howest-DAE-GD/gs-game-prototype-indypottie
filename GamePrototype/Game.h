@@ -2,6 +2,7 @@
 #include "BaseGame.h"
 #include "utils.h"
 #include "Colony.h"
+#include "Colonist.h"
 
 
 class Game : public BaseGame
@@ -33,4 +34,8 @@ private:
 	void ClearBackground( ) const;
 
 	Colony* m_ColonyPtr;
+
+	//Colonist* m_TestZombie1;
+	//Colonist* m_TestZombie2;
+	//Colonist* m_TestZombie3;
 };

@@ -52,6 +52,7 @@ private:
 	};
 
 
+		 
 	// data members
 	float					m_ScreenWidth;
 	float					m_ScreenHeight;
