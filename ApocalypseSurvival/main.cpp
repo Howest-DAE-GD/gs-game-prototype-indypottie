@@ -12,7 +12,7 @@ int SDL_main(int argv, char** args)
 
 	StartHeapControl();
 
-	Game* pGame{ new Game{ Window{ "Apocalypse Colony - Pottie, Indy - 1DAE15", 1000.f , 900.f } } };
+	Game* pGame{ new Game{ Window{ "ApocalypseSurvival - Pottie, Indy - 1DAE15", 846.f , 500.f } } };
 	pGame->Run();
 	delete pGame;
 

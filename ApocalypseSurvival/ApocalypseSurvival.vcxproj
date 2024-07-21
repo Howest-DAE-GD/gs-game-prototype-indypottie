@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f3ebe033-7d91-46cf-8398-c5af8d437d74}</ProjectGuid>
-    <RootNamespace>GamePrototype</RootNamespace>
+    <ProjectGuid>{fb438169-2234-49a7-ac25-07674d8a5b36}</ProjectGuid>
+    <RootNamespace>ApocalypseSurvival</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -147,23 +147,27 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Colonist.cpp" />
-    <ClCompile Include="ColonistTaskManager.cpp" />
-    <ClCompile Include="Colony.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameActor.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
+    <ClCompile Include="HungerBar.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Colonist.h" />
-    <ClInclude Include="ColonistTaskManager.h" />
-    <ClInclude Include="Colony.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameActor.h" />
+    <ClInclude Include="HealthBar.h" />
+    <ClInclude Include="HungerBar.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

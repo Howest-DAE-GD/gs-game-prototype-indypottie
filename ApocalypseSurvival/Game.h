@@ -1,9 +1,13 @@
 #pragma once
 #include "BaseGame.h"
-#include "utils.h"
-#include "Colony.h"
-#include "Colonist.h"
 
+#include <iostream>
+
+#include "Camera.h"
+#include "GameActor.h"
+#include "Player.h"
+#include "Map.h"
+#include "Clock.h"
 
 class Game : public BaseGame
 {
@@ -33,9 +37,11 @@ private:
 	void Cleanup( );
 	void ClearBackground( ) const;
 
-	Colony* m_ColonyPtr;
+	Player* m_PlayerPtr;
 
-	//Colonist* m_TestZombie1;
-	//Colonist* m_TestZombie2;
-	//Colonist* m_TestZombie3;
+	Camera* m_CameraPtr;
+
+	Map*	m_MapPtr;
+
+	Clock*  m_ClockPtr;
 };
