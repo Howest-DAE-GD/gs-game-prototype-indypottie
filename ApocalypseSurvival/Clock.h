@@ -27,7 +27,7 @@ private:
     int     m_Minutes;
     int     m_Seconds;
 
-    const float m_SecsPerInGameHour{ (8 * 60.0f) / 24.0f };
+    const float m_SecsPerInGameHour{ 3600.f / 360.f};
 
     std::string m_TimeString;
 

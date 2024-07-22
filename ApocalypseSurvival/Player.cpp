@@ -11,13 +11,17 @@ Player::Player(Point2f location, std::string filePath, Point2f baseLocation)
 	m_HealthBarPtr = new HealthBar(healthBarLocation, 100.f);
 
 	Point2f hungerBarLocation{ 5.f, 440.f };
-	m_HungerBarPtr = new HungerBar(hungerBarLocation, 100.f, 80.f);
+	m_HungerBarPtr = new HungerBar(hungerBarLocation, 100.f, 90.f);
+
+	Point2f staminaBarLocation{ 5.f, 30.f };
+	m_StaminaBarPtr = new StaminaBar(staminaBarLocation, 100.f);
 }
 
 Player::~Player()
 {
 	delete m_HealthBarPtr;
 	delete m_HungerBarPtr;
+	delete m_StaminaBarPtr;
 }
 
 void Player::Update(float elapsedSec)
@@ -27,6 +31,13 @@ void Player::Update(float elapsedSec)
 	m_HungerBarPtr->Update(elapsedSec);
 
 	UpdateMovement(elapsedSec);
+
+	CheckHunger(elapsedSec);
+
+	if (!m_PlayerMovement.sprinting)
+	{
+		m_StaminaBarPtr->Increase(0.1f);
+	}
 }
 
 void Player::Draw() const
@@ -38,6 +49,7 @@ void Player::DrawHudElements() const
 {
 	m_HealthBarPtr->Draw();
 	m_HungerBarPtr->Draw();
+	m_StaminaBarPtr->Draw();
 }
 
 void Player::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
@@ -62,6 +74,12 @@ void Player::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 		// right
 	case SDLK_d:
 		m_PlayerMovement.right = false;
+		break;
+
+		// sprint
+	case SDLK_LSHIFT:
+		m_PlayerMovement.sprinting = false;
+		m_HungerBarPtr->SetHungerDecreaseRate(0.5f);
 		break;
 
 	default:
@@ -93,6 +111,11 @@ void Player::ProcessKeyDownEvent(const SDL_KeyboardEvent& e)
 		m_PlayerMovement.right = true;
 		break;
 
+		// sprint
+	case SDLK_LSHIFT:
+		m_PlayerMovement.sprinting = true;
+		break;
+
 	default:
 		break;
 	}
@@ -106,6 +129,29 @@ void Player::TakeDamage(float damagePoints)
 void Player::RestoreHealth(float healingPoints)
 {
 	m_HealthBarPtr->RestoreHealth(healingPoints);
+}
+
+void Player::PickupItem(Pickup::PickupType type)
+{
+	m_Inventory.push_back(type);
+}
+
+bool Player::ConsumeFood()
+{
+	auto it = std::find(m_Inventory.begin(), m_Inventory.end(), Pickup::PickupType::food);
+	if (it != m_Inventory.end())
+	{
+		m_Inventory.erase(it);
+		return true;
+	}
+	return false;
+}
+
+Rectf Player::GetRect() const
+{
+	Rectf playerRect{ m_MyLocation.x, m_MyLocation.y, m_MyTexturePtr->GetWidth(), m_MyTexturePtr->GetHeight() };
+
+	return playerRect;
 }
 
 void Player::UpdateMovement(float elapsedSec)
@@ -135,6 +181,41 @@ void Player::UpdateMovement(float elapsedSec)
 		movement = movement.Normalized();
 	}
 
-	m_MyLocation.x += movement.x * m_MySpeed.x * elapsedSec;
-	m_MyLocation.y += movement.y * m_MySpeed.y * elapsedSec;
+	if (!m_PlayerMovement.sprinting and m_StaminaBarPtr->GetCurrentStamina() > 0.f)
+	{
+		m_MyLocation.x += movement.x * m_MySpeed.x * elapsedSec;
+		m_MyLocation.y += movement.y * m_MySpeed.y * elapsedSec;
+	}
+	else
+	{
+		m_MyLocation.x += movement.x * (m_MySpeed.x * 1.5f) * elapsedSec;
+		m_MyLocation.y += movement.y * (m_MySpeed.y * 1.5f) * elapsedSec;
+
+		m_StaminaBarPtr->Decrease(0.1f);
+
+		m_HungerBarPtr->SetHungerDecreaseRate(1.f);
+
+		if (m_StaminaBarPtr->GetCurrentStamina() <= 0)
+		{
+			m_PlayerMovement.sprinting = false;
+			m_HungerBarPtr->SetHungerDecreaseRate(0.25f);
+		}
+	}
+
+}
+
+void Player::CheckHunger(float elapsedSec)
+{
+	if (m_HungerBarPtr->GetHunger() <= 95.f)
+	{
+		if (ConsumeFood())
+		{
+			m_HungerBarPtr->Refill(5.f);
+		}
+	}
+
+	if (m_HungerBarPtr->GetHunger() <= 0.f)
+	{
+		TakeDamage(0.005f);
+	}
 }

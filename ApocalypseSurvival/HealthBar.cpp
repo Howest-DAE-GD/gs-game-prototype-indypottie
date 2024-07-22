@@ -38,8 +38,6 @@ void HealthBar::DamageHealth(float damagePoints)
 	m_CurrentHealth <= 0.f ? m_CurrentHealth = 0.f : m_CurrentHealth -= damagePoints;
 
 	m_Width = m_CurrentHealth;
-
-	std::cout << m_CurrentHealth << std::endl;
 }
 
 void HealthBar::RestoreHealth(float HealingPoints)

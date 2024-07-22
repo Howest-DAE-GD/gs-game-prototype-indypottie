@@ -5,7 +5,7 @@ HungerBar::HungerBar(Point2f location, float maxHunger, float initialHunger)
     : GameActor(location)
     , m_MaxHunger(maxHunger) 
     , m_CurrentHunger(initialHunger)
-    , m_HungerDecreaseRate(0.15f) // Example decrease rate per second
+    , m_HungerDecreaseRate(0.05f) // Example decrease rate per second
 {
     // nothing to do
 }
@@ -20,6 +20,8 @@ void HungerBar::Update(float elapsedSec)
     {
         m_CurrentHunger = 0.f;
     }
+
+    std::cout << m_HungerDecreaseRate << std::endl;
 }
 
 void HungerBar::Draw() const
