@@ -15,6 +15,12 @@ Player::Player(Point2f location, std::string filePath, Point2f baseLocation)
 
 	Point2f staminaBarLocation{ 5.f, 30.f };
 	m_StaminaBarPtr = new StaminaBar(staminaBarLocation, 100.f);
+
+	Point2f foodHudLocation{ 5.f, 400.f };
+	m_FoodInventoryPtr = new ItemHUD{ foodHudLocation,"FOOD",0 };
+
+	Point2f woodHudLocation{ 5.f, 380.f };
+	m_WoodInventoryPtr = new ItemHUD{ woodHudLocation,"WOOD",0 };
 }
 
 Player::~Player()
@@ -22,6 +28,8 @@ Player::~Player()
 	delete m_HealthBarPtr;
 	delete m_HungerBarPtr;
 	delete m_StaminaBarPtr;
+	delete m_FoodInventoryPtr;
+	delete m_WoodInventoryPtr;
 }
 
 void Player::Update(float elapsedSec)
@@ -50,6 +58,8 @@ void Player::DrawHudElements() const
 	m_HealthBarPtr->Draw();
 	m_HungerBarPtr->Draw();
 	m_StaminaBarPtr->Draw();
+	m_FoodInventoryPtr->Draw();
+	m_WoodInventoryPtr->Draw();
 }
 
 void Player::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
@@ -79,7 +89,7 @@ void Player::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 		// sprint
 	case SDLK_LSHIFT:
 		m_PlayerMovement.sprinting = false;
-		m_HungerBarPtr->SetHungerDecreaseRate(0.5f);
+		m_HungerBarPtr->SetHungerDecreaseRate(0.25f);
 		break;
 
 	default:
@@ -134,6 +144,15 @@ void Player::RestoreHealth(float healingPoints)
 void Player::PickupItem(Pickup::PickupType type)
 {
 	m_Inventory.push_back(type);
+
+	if (type == Pickup::PickupType::food)
+	{
+		m_FoodInventoryPtr->IncreaseItem();
+	}
+	else if (type == Pickup::PickupType::wood)
+	{
+		m_WoodInventoryPtr->IncreaseItem();
+	}
 }
 
 bool Player::ConsumeFood()
@@ -152,6 +171,29 @@ Rectf Player::GetRect() const
 	Rectf playerRect{ m_MyLocation.x, m_MyLocation.y, m_MyTexturePtr->GetWidth(), m_MyTexturePtr->GetHeight() };
 
 	return playerRect;
+}
+
+int Player::GetCurrentWood()
+{
+	int woodCount = 0;
+
+	for (const auto& item : m_Inventory)
+	{
+		if (item == Pickup::PickupType::wood)
+		{
+			++woodCount;
+			
+		}
+	}
+
+	m_Inventory.erase(
+		std::remove(m_Inventory.begin(), m_Inventory.end(), Pickup::PickupType::wood),
+		m_Inventory.end()
+	);
+
+	m_WoodInventoryPtr->RemoveItemAmount(woodCount);
+
+	return woodCount;
 }
 
 void Player::UpdateMovement(float elapsedSec)
@@ -193,12 +235,11 @@ void Player::UpdateMovement(float elapsedSec)
 
 		m_StaminaBarPtr->Decrease(0.1f);
 
-		m_HungerBarPtr->SetHungerDecreaseRate(1.f);
+		m_HungerBarPtr->SetHungerDecreaseRate(0.5f);
 
 		if (m_StaminaBarPtr->GetCurrentStamina() <= 0)
 		{
 			m_PlayerMovement.sprinting = false;
-			m_HungerBarPtr->SetHungerDecreaseRate(0.25f);
 		}
 	}
 
@@ -211,6 +252,7 @@ void Player::CheckHunger(float elapsedSec)
 		if (ConsumeFood())
 		{
 			m_HungerBarPtr->Refill(5.f);
+			m_FoodInventoryPtr->DecreaseItem();
 		}
 	}
 

@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Clock.h"
 #include "Pickup.h"
+#include "PlayerBase.h"
 #include "utils.h"
 
 class Game : public BaseGame
@@ -47,8 +48,12 @@ private:
 
 	Clock*  m_ClockPtr;
 
+	PlayerBase* m_PlayerBasePtr;
+
 	std::vector<Pickup*> m_PickupsPtrArr;
 
 	void SpawnPickups();
 	void HandlePickups();
+
+	void DropOffWood();
 };

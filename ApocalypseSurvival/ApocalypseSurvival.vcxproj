@@ -153,11 +153,13 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
     <ClCompile Include="GameActor.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="HungerBar.cpp" />
+    <ClCompile Include="ItemHUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerBase.cpp" />
     <ClCompile Include="StaminaBar.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +169,12 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
     <ClInclude Include="GameActor.h" />
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="HungerBar.h" />
+    <ClInclude Include="ItemHUD.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerBase.h" />
     <ClInclude Include="StaminaBar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

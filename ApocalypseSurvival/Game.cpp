@@ -14,12 +14,14 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
-	m_MapPtr = new Map{ Point2f(0.f,0.f),"Map_tiled.png",2000.f,2000.f };
+	m_MapPtr = new Map{ Point2f(0.f,0.f),"map.png",4000.f,4000.f };
 
 	m_PlayerPtr = new Player{ m_MapPtr->GetCenterPoint(),"Player.png",Point2f{100.f,100.f} };
 	m_CameraPtr = new Camera{ GetViewPort().width, GetViewPort().height };
 
 	m_ClockPtr = new Clock(Point2f(GetViewPort().width, GetViewPort().height), GetViewPort().width, GetViewPort().height);
+
+	m_PlayerBasePtr = new PlayerBase(m_MapPtr->GetCenterPoint(), "Base_big.png");
 
 	SpawnPickups();
 }
@@ -36,6 +38,8 @@ void Game::Cleanup( )
 		delete pickup;
 	}
 	m_PickupsPtrArr.clear();
+
+	delete m_PlayerBasePtr;
 }
 
 void Game::Update( float elapsedSec )
@@ -51,10 +55,10 @@ void Game::Update( float elapsedSec )
 		m_PlayerPtr->SetLocation(m_MapPtr->GetCenterPoint());
 	}
 
-	//m_PlayerPtr->SetCanMove(m_MapPtr->IsWithinBounds(m_PlayerPtr->GetLocation()));
 
-	//std::cout << m_PlayerPtr->GetLocation().x << " , " << m_PlayerPtr->GetLocation().y << std::endl;
+	m_PlayerBasePtr->CheckPlayerInteraction(m_PlayerPtr->GetLocation());
 
+	m_PlayerBasePtr->Update(elapsedSec);
 }
 
 void Game::Draw( ) const
@@ -70,12 +74,14 @@ void Game::Draw( ) const
 		pickup->Draw();
 	}
 
+	m_PlayerBasePtr->Draw();
 
 	m_PlayerPtr->Draw();
 
 	m_CameraPtr->Reset();
 
 	m_PlayerPtr->DrawHudElements();
+	m_PlayerBasePtr->DrawHudElements();
 
 	m_ClockPtr->Draw();
 }
@@ -88,6 +94,22 @@ void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
 void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 {
 	m_PlayerPtr->ProcessKeyUpEvent(e);
+	m_PlayerBasePtr->ProcessKeyUpEvent(e);
+
+	switch (e.keysym.sym)
+	{
+	case SDLK_e:
+
+		if (m_PlayerBasePtr->GetFirePlaceInteractionPoint())
+		{
+			DropOffWood();
+		}
+		break;
+
+
+	default:
+		break;
+	}
 
 }
 
@@ -116,7 +138,7 @@ void Game::ClearBackground( ) const
 
 void Game::SpawnPickups()
 {
-	const int numPickups{ 50 };
+	const int numPickups{ 150 };
 
 	for (int index{ 0 }; index < numPickups; ++index)
 	{
@@ -140,4 +162,9 @@ void Game::HandlePickups()
 			++it;
 		}
 	}
+}
+
+void Game::DropOffWood()
+{
+	m_PlayerBasePtr->DepositFuel(m_PlayerPtr->GetCurrentWood());
 }

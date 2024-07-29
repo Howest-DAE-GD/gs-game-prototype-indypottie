@@ -5,6 +5,7 @@
 #include "StaminaBar.h"
 #include "Vector2f.h"
 #include "Pickup.h"
+#include "ItemHUD.h"
 #include <vector>
 
 class Player : public GameActor
@@ -43,6 +44,8 @@ public:
 
 	Rectf GetRect() const;
 
+	int GetCurrentWood();
+
 private:
 
 	void UpdateMovement(float elapsedSec);
@@ -57,6 +60,9 @@ private:
 	HealthBar*						m_HealthBarPtr;
 	HungerBar*						m_HungerBarPtr;
 	StaminaBar*						m_StaminaBarPtr;
+
+	ItemHUD*						m_FoodInventoryPtr;
+	ItemHUD*						m_WoodInventoryPtr;
 
 	bool							m_Dead;
 

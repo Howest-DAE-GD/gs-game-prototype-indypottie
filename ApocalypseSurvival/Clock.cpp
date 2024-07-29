@@ -4,7 +4,7 @@
 Clock::Clock(Point2f location, float windowWidth, float windowHeight)
 	: GameActor(location)
     , m_TimeElapsed(0.0f)
-    , m_Hours(0)
+    , m_Hours(7)
     , m_Minutes(0)
     , m_Seconds(0)
     , m_WindowWidth(windowWidth)
@@ -26,7 +26,7 @@ void Clock::Update(float elapsedSec)
     // Calculate in-game time
     float inGameSeconds = m_TimeElapsed * m_SecsPerInGameHour; // Convert real seconds to in-game seconds
 
-    m_Hours   = static_cast<int>(inGameSeconds / 3600) % 24;
+    m_Hours   = 7 + static_cast<int>(inGameSeconds / 3600) % 24;
     m_Minutes = static_cast<int>(inGameSeconds / 60) % 60;
     m_Seconds = static_cast<int>(inGameSeconds) % 60;
 
