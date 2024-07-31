@@ -9,6 +9,8 @@ namespace utils
 #pragma region OpenGLDrawFunctionality
 
 	void SetColor( const Color4f& color );
+
+	Color4f Lerp(const Color4f& start, const Color4f& end, float t);
 	
 	void DrawPoint( float x, float y, float pointSize = 1.0f );
 	void DrawPoint( const Point2f& p, float pointSize = 1.0f );

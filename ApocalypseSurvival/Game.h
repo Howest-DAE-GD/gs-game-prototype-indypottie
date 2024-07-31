@@ -7,10 +7,11 @@
 #include "GameActor.h"
 #include "Player.h"
 #include "Map.h"
-#include "Clock.h"
+#include "DayNightCycle.h"
 #include "Pickup.h"
 #include "PlayerBase.h"
 #include "utils.h"
+#include "PopUpText.h"
 
 class Game : public BaseGame
 {
@@ -46,14 +47,21 @@ private:
 
 	Map*	m_MapPtr;
 
-	Clock*  m_ClockPtr;
+	DayNightCycle* m_DayNightCyclePtr;
 
 	PlayerBase* m_PlayerBasePtr;
 
 	std::vector<Pickup*> m_PickupsPtrArr;
 
+	PopUpText* m_CurrentDayPopUp;
+
 	void SpawnPickups();
 	void HandlePickups();
 
 	void DropOffWood();
+	void StoreFood();
+
+	void GivePlayerFood();
+
+	void HandleNightTime();
 };

@@ -24,8 +24,17 @@ public:
 	void ProcessKeyDownEvent(const SDL_KeyboardEvent& e);
 
 	void DepositFuel(int amount);
+	void StoreFood(int amount);
+
+	int GetCurrentStoredFood();
 
 	bool GetFirePlaceInteractionPoint() const;
+	bool GetDoorInteractionPoint() const;
+
+	bool GetIsPlayerInBase() const;
+	bool GetIsFireOn() const;
+
+	void RemoveFood(int amount);
 
 private:
 
@@ -47,11 +56,16 @@ private:
 	int m_FuelLeft;
 	int m_CurrentFuelPoints;
 
+	int m_StoredFood;
+
 	float m_ElapsedTime;
 
-	const float M_FUEL_DECREASE_RATE{ 2.5f };
+	const float M_FUEL_DECREASE_RATE{ 0.125f };
 	const int M_MAX_FUEL_POINTS{ 100 };
 
 	ItemHUD*	m_CurrentFuelHUD;
+	ItemHUD*	m_FoodStoredHUD;
+
+	Texture*	m_BaseFireOnTexture;
 };
 

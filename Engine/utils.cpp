@@ -12,6 +12,16 @@ void utils::SetColor( const Color4f& color )
 	glColor4f( color.r, color.g, color.b, color.a );
 }
 
+Color4f utils::Lerp(const Color4f& start, const Color4f& end, float t)
+{
+	return Color4f{
+		   start.r + t * (end.r - start.r),
+		   start.g + t * (end.g - start.g),
+		   start.b + t * (end.b - start.b),
+		   start.a + t * (end.a - start.a)
+	};
+}
+
 void utils::DrawPoint( float x, float y, float pointSize )
 {
 	glPointSize( pointSize );

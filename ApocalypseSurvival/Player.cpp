@@ -141,6 +141,11 @@ void Player::RestoreHealth(float healingPoints)
 	m_HealthBarPtr->RestoreHealth(healingPoints);
 }
 
+void Player::SetStopHealing(bool stopHealing)
+{
+	m_StopHealing = stopHealing;
+}
+
 void Player::PickupItem(Pickup::PickupType type)
 {
 	m_Inventory.push_back(type);
@@ -173,7 +178,7 @@ Rectf Player::GetRect() const
 	return playerRect;
 }
 
-int Player::GetCurrentWood()
+int Player::GetCurrentWood(bool erase)
 {
 	int woodCount = 0;
 
@@ -186,14 +191,52 @@ int Player::GetCurrentWood()
 		}
 	}
 
-	m_Inventory.erase(
-		std::remove(m_Inventory.begin(), m_Inventory.end(), Pickup::PickupType::wood),
-		m_Inventory.end()
-	);
+	if (erase)
+	{
+		m_Inventory.erase(
+			std::remove(m_Inventory.begin(), m_Inventory.end(), Pickup::PickupType::wood),
+			m_Inventory.end()
+		);
 
-	m_WoodInventoryPtr->RemoveItemAmount(woodCount);
+		m_WoodInventoryPtr->RemoveItemAmount(woodCount);
+	}
 
 	return woodCount;
+}
+
+int Player::GetCurrentFood(bool erase)
+{
+	int foodCount = 0;
+
+	for (const auto& item : m_Inventory)
+	{
+		if (item == Pickup::PickupType::food)
+		{
+			++foodCount;
+
+		}
+	}
+
+	if (erase)
+	{
+		m_Inventory.erase(
+			std::remove(m_Inventory.begin(), m_Inventory.end(), Pickup::PickupType::food),
+			m_Inventory.end()
+		);
+
+		m_FoodInventoryPtr->RemoveItemAmount(foodCount);
+	}
+
+	return foodCount;
+}
+
+void Player::GiveFood(int amount)
+{
+	for (int iterator{ 0 }; iterator < amount; ++iterator)
+	{
+		m_Inventory.push_back(Pickup::PickupType::food);
+		m_FoodInventoryPtr->IncreaseItem();
+	}
 }
 
 void Player::UpdateMovement(float elapsedSec)
@@ -230,8 +273,8 @@ void Player::UpdateMovement(float elapsedSec)
 	}
 	else
 	{
-		m_MyLocation.x += movement.x * (m_MySpeed.x * 1.5f) * elapsedSec;
-		m_MyLocation.y += movement.y * (m_MySpeed.y * 1.5f) * elapsedSec;
+		m_MyLocation.x += movement.x * (m_MySpeed.x * 2.f) * elapsedSec;
+		m_MyLocation.y += movement.y * (m_MySpeed.y * 2.f) * elapsedSec;
 
 		m_StaminaBarPtr->Decrease(0.1f);
 
@@ -259,5 +302,10 @@ void Player::CheckHunger(float elapsedSec)
 	if (m_HungerBarPtr->GetHunger() <= 0.f)
 	{
 		TakeDamage(0.005f);
+	}
+
+	if (m_HungerBarPtr->GetHunger() >= 80.f and !m_StopHealing)
+	{
+		RestoreHealth(0.05);
 	}
 }

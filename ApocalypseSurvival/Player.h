@@ -38,13 +38,17 @@ public:
 
 	void TakeDamage(float damagePoints);
 	void RestoreHealth(float healingPoints);
+	void SetStopHealing(bool stopHealing);
 
 	void PickupItem(Pickup::PickupType type);
 	bool ConsumeFood();
 
 	Rectf GetRect() const;
 
-	int GetCurrentWood();
+	int GetCurrentWood(bool erase);
+	int GetCurrentFood(bool erase);
+
+	void GiveFood(int amount);
 
 private:
 
@@ -65,7 +69,7 @@ private:
 	ItemHUD*						m_WoodInventoryPtr;
 
 	bool							m_Dead;
-
+	bool							m_StopHealing;
 	std::vector<Pickup::PickupType> m_Inventory;
 };
 

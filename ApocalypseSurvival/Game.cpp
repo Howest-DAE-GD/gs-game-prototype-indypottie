@@ -19,11 +19,14 @@ void Game::Initialize( )
 	m_PlayerPtr = new Player{ m_MapPtr->GetCenterPoint(),"Player.png",Point2f{100.f,100.f} };
 	m_CameraPtr = new Camera{ GetViewPort().width, GetViewPort().height };
 
-	m_ClockPtr = new Clock(Point2f(GetViewPort().width, GetViewPort().height), GetViewPort().width, GetViewPort().height);
+	m_DayNightCyclePtr = new DayNightCycle(Point2f(GetViewPort().width, GetViewPort().height), GetViewPort().width, GetViewPort().height);
 
 	m_PlayerBasePtr = new PlayerBase(m_MapPtr->GetCenterPoint(), "Base_big.png");
 
 	SpawnPickups();
+
+	m_CurrentDayPopUp = new PopUpText{ Point2f(GetViewPort().width / 2.f, GetViewPort().height / 2.f), "DAY: 1" ,GetViewPort().width , GetViewPort().height };
+	m_CurrentDayPopUp->SetDisplay(true);
 }
 
 void Game::Cleanup( )
@@ -31,7 +34,7 @@ void Game::Cleanup( )
 	delete m_CameraPtr;
 	delete m_PlayerPtr;
 	delete m_MapPtr;
-	delete m_ClockPtr;
+	delete m_DayNightCyclePtr;
 
 	for (auto pickup : m_PickupsPtrArr)
 	{
@@ -40,11 +43,27 @@ void Game::Cleanup( )
 	m_PickupsPtrArr.clear();
 
 	delete m_PlayerBasePtr;
+	delete m_CurrentDayPopUp;
 }
 
 void Game::Update( float elapsedSec )
 {
-	m_ClockPtr->Update(elapsedSec);
+	m_CurrentDayPopUp->Update(elapsedSec);
+
+
+	int previousDay = m_DayNightCyclePtr->GetCurrentDay();
+
+	m_DayNightCyclePtr->Update(elapsedSec);
+
+	if (m_DayNightCyclePtr->GetCurrentDay() > previousDay)
+	{
+		std::string currentDayString { "Day: " + std::to_string(m_DayNightCyclePtr->GetCurrentDay()) };
+		m_CurrentDayPopUp->UpdateString(currentDayString);
+		m_CurrentDayPopUp->SetDisplay(true);
+
+		SpawnPickups();
+	}
+
 
 	m_PlayerPtr->Update(elapsedSec);
 
@@ -59,6 +78,15 @@ void Game::Update( float elapsedSec )
 	m_PlayerBasePtr->CheckPlayerInteraction(m_PlayerPtr->GetLocation());
 
 	m_PlayerBasePtr->Update(elapsedSec);
+
+	if (m_DayNightCyclePtr->GetDayTime() or (m_PlayerBasePtr->GetIsPlayerInBase() and m_PlayerBasePtr->GetIsFireOn()))
+	{
+		m_PlayerPtr->SetStopHealing(false);
+	}
+	else
+	{
+		HandleNightTime();
+	}
 }
 
 void Game::Draw( ) const
@@ -80,10 +108,15 @@ void Game::Draw( ) const
 
 	m_CameraPtr->Reset();
 
+	// hud elements
+
 	m_PlayerPtr->DrawHudElements();
 	m_PlayerBasePtr->DrawHudElements();
 
-	m_ClockPtr->Draw();
+	m_DayNightCyclePtr->Draw();
+
+	m_CurrentDayPopUp->Draw();
+
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -104,8 +137,22 @@ void Game::ProcessKeyUpEvent( const SDL_KeyboardEvent& e )
 		{
 			DropOffWood();
 		}
+
+		if (m_PlayerBasePtr->GetDoorInteractionPoint())
+		{
+			StoreFood();
+		}
+
 		break;
 
+	case SDLK_f:
+
+		if (m_PlayerBasePtr->GetDoorInteractionPoint())
+		{
+			GivePlayerFood();
+		}
+
+		break;
 
 	default:
 		break;
@@ -120,9 +167,7 @@ void Game::ProcessMouseMotionEvent( const SDL_MouseMotionEvent& e )
 
 void Game::ProcessMouseDownEvent( const SDL_MouseButtonEvent& e )
 {
-	m_PlayerPtr->TakeDamage(5.f);
 
-	
 }
 
 void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
@@ -151,6 +196,18 @@ void Game::HandlePickups()
 {
 	for (auto it = m_PickupsPtrArr.begin(); it != m_PickupsPtrArr.end(); )
 	{
+		if ((m_PlayerPtr->GetCurrentFood(false) == 10) and ((*it)->GetType() == Pickup::PickupType::food))
+		{
+			++it;
+			continue;
+		}
+
+		if ((m_PlayerPtr->GetCurrentWood(false) == 10) and ((*it)->GetType() == Pickup::PickupType::wood))
+		{
+			++it;
+			continue;
+		}
+
 		if (utils::IsOverlapping(m_PlayerPtr->GetRect(), (*it)->GetRect()))
 		{
 			m_PlayerPtr->PickupItem((*it)->GetType());
@@ -166,5 +223,31 @@ void Game::HandlePickups()
 
 void Game::DropOffWood()
 {
-	m_PlayerBasePtr->DepositFuel(m_PlayerPtr->GetCurrentWood());
+	m_PlayerBasePtr->DepositFuel(m_PlayerPtr->GetCurrentWood(true));
+}
+
+void Game::StoreFood()
+{
+	m_PlayerBasePtr->StoreFood(m_PlayerPtr->GetCurrentFood(true));
+}
+
+void Game::GivePlayerFood()
+{
+	// Get current food amounts
+	int currentPlayerFood = m_PlayerPtr->GetCurrentFood(false);
+	int currentStoredFood = m_PlayerBasePtr->GetCurrentStoredFood();
+
+	// Calculate how much food the player can take
+	int maxPlayerCapacity = 10 - currentPlayerFood;
+	int foodToGive = std::min(currentStoredFood, maxPlayerCapacity);
+
+	// Give food to player and remove from storage
+	m_PlayerPtr->GiveFood(foodToGive);
+	m_PlayerBasePtr->RemoveFood(foodToGive);
+}
+
+void Game::HandleNightTime()
+{
+	m_PlayerPtr->SetStopHealing(true);
+	m_PlayerPtr->TakeDamage(0.015f);
 }

@@ -6,15 +6,23 @@ PlayerBase::PlayerBase(Point2f location, std::string filePath)
 	, m_PlayerAtBed			{ false }
 	, m_PlayerAtFireplace	{ false }
 	, m_PlayerAtDoor		{ false }
-	, m_fireIsOn			{ false }
+	, m_fireIsOn			{ true }
 	, m_PlayerInBase		{ true  }
 	, m_FuelLeft			{ 2     }
-	, m_CurrentFuelPoints	{ 5     }
+	, m_CurrentFuelPoints	{ 100   }
 	, m_ElapsedTime			{ 0.f	}
+	, m_BaseFireOnTexture{ new Texture("Base_big_FireOn.png") }
+	, m_StoredFood{ 0 }
 {
 
 	Point2f fuelleftHudLocation{ 640.f, 400.f };
 	m_CurrentFuelHUD = new ItemHUD{ fuelleftHudLocation,"FUEL IN BASE", m_FuelLeft };
+
+	Point2f foodStoredLocation{ 640.f, 350.f };
+	m_FoodStoredHUD = new ItemHUD{ foodStoredLocation,"FOOD STORED", m_StoredFood };
+
+	m_MyLocation.x = (m_MyLocation.x - m_MyTexturePtr->GetWidth() / 2.f);
+	m_MyLocation.y = (m_MyLocation.y - m_MyTexturePtr->GetHeight() / 2.f);
 
 	InitializePoints();
 }
@@ -22,6 +30,8 @@ PlayerBase::PlayerBase(Point2f location, std::string filePath)
 PlayerBase::~PlayerBase()
 {
 	delete m_CurrentFuelHUD;
+	delete m_BaseFireOnTexture;
+	delete m_FoodStoredHUD;
 }
 
 void PlayerBase::Update(float elapsedSec)
@@ -53,19 +63,21 @@ void PlayerBase::Update(float elapsedSec)
 
 void PlayerBase::Draw() const
 {
-	m_MyTexturePtr->Draw(m_MyLocation);
-
-	//utils::SetColor(Color4f{ 0.0f, 1.0f, 0.0f, 1.0f });
-	//for (const auto& interactionPoint : m_InteractionPointsUM)
-	//{
-	//	utils::DrawRect(interactionPoint.second);
-	//}
+	if (m_fireIsOn)
+	{
+		m_BaseFireOnTexture->Draw(m_MyLocation);
+	}
+	else
+	{
+		m_MyTexturePtr->Draw(m_MyLocation);
+	}
 }
 
 void PlayerBase::DrawHudElements() const
 {
 	if (!m_PlayerInBase) return;
 	m_CurrentFuelHUD->Draw();
+	m_FoodStoredHUD->Draw();
 }
 
 void PlayerBase::CheckPlayerInteraction(const Point2f& playerLocation)
@@ -148,9 +160,42 @@ void PlayerBase::DepositFuel(int amount)
 	std::cout << m_FuelLeft << std::endl;
 }
 
+void PlayerBase::StoreFood(int amount)
+{
+	m_StoredFood += amount;
+	m_FoodStoredHUD->AddItemAmount(amount);
+	std::cout << m_StoredFood << std::endl;
+}
+
+int PlayerBase::GetCurrentStoredFood()
+{
+	return m_StoredFood;
+}
+
 bool PlayerBase::GetFirePlaceInteractionPoint() const
 {
 	return m_PlayerAtFireplace;
+}
+
+bool PlayerBase::GetDoorInteractionPoint() const
+{
+	return m_PlayerAtDoor;
+}
+
+bool PlayerBase::GetIsPlayerInBase() const
+{
+	return m_PlayerInBase;
+}
+
+bool PlayerBase::GetIsFireOn() const
+{
+	return m_fireIsOn;
+}
+
+void PlayerBase::RemoveFood(int amount)
+{
+	m_StoredFood -= amount;
+	m_FoodStoredHUD->RemoveItemAmount(amount);
 }
 
 void PlayerBase::InitializePoints()
