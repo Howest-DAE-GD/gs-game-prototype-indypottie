@@ -17,6 +17,15 @@ public:
 
 	bool GetDayTime() const;
 
+	void SetTime(int hours, int minutes, int seconds);
+	void SetDay(int day);
+
+	int GetHour();
+	int GetMinutes();
+	int GetSeconds();
+
+	void SetClockColor(Color4f color);
+
 private:
 
 	void UpdateSkycolor();

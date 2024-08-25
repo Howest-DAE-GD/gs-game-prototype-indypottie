@@ -50,6 +50,15 @@ public:
 
 	void GiveFood(int amount);
 
+	void SetFoodPoints(int foodPoints);
+
+	Point2f GetCenterPoint() const;
+
+	void SetIsDead(bool isDead);
+	bool GetIsDead();
+
+	void SetInventoryColor(const Color4f& color);
+
 private:
 
 	void UpdateMovement(float elapsedSec);

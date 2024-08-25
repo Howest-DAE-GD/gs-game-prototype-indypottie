@@ -30,11 +30,17 @@ public:
 
 	bool GetFirePlaceInteractionPoint() const;
 	bool GetDoorInteractionPoint() const;
+	bool GetBedInteractionPoint() const;
 
 	bool GetIsPlayerInBase() const;
 	bool GetIsFireOn() const;
 
 	void RemoveFood(int amount);
+	void RemoveWood(int amount);
+
+	Point2f GetCenterPoint() const;
+
+	void SetInventoryColor(Color4f color);
 
 private:
 

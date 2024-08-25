@@ -19,6 +19,8 @@ public:
 	void AddItemAmount(int amount);
 	void RemoveItemAmount(int amount);
 
+	void SetTextColor(const Color4f& color);
+
 private:
 
 	void UpdateTextureString();
@@ -28,6 +30,8 @@ private:
 	std::string m_ItemName;
 
 	int			m_CurrentItems;
+
+	Color4f		m_TextColor;
 	
 };
 

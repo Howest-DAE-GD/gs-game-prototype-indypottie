@@ -12,6 +12,7 @@
 #include "PlayerBase.h"
 #include "utils.h"
 #include "PopUpText.h"
+#include "Enemy.h"
 
 class Game : public BaseGame
 {
@@ -41,6 +42,23 @@ private:
 	void Cleanup( );
 	void ClearBackground( ) const;
 
+	void SpawnPickups();
+	void SpawnEnemies();
+	void HandlePickups();
+
+	void DropOffWood();
+	void StoreFood();
+
+	void GivePlayerFood();
+
+	void HandleNightTime();
+	void HandleDayTime();
+	void HandleEvening();
+
+	void Sleep();
+
+	void Restart();
+
 	Player* m_PlayerPtr;
 
 	Camera* m_CameraPtr;
@@ -52,16 +70,27 @@ private:
 	PlayerBase* m_PlayerBasePtr;
 
 	std::vector<Pickup*> m_PickupsPtrArr;
+	std::vector<Enemy*>	 m_EnemiesPtrArr;
+	std::vector<Enemy*>	 m_SmallEnemiesPtrArr;
+
+	std::vector<Enemy*>	 m_SmallNightEnemiesPtrArr;
 
 	PopUpText* m_CurrentDayPopUp;
 
-	void SpawnPickups();
-	void HandlePickups();
+	PopUpText* m_IntroPopup;
+	PopUpText* m_ControlsPopup;
 
-	void DropOffWood();
-	void StoreFood();
+	PopUpText* m_PlayerDeadPopup;
+	PopUpText* m_PlayerWonPopup;
 
-	void GivePlayerFood();
 
-	void HandleNightTime();
+
+	bool m_Paused;
+	bool m_DisplayControls;
+
+	bool m_PlayerWon;
+
+	bool m_HandledNightTime;
+	bool m_HandledDayTime;
+	bool m_HandledEvening;
 };

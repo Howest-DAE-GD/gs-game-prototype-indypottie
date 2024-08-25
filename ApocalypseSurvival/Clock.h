@@ -19,12 +19,15 @@ public:
     int GetSeconds() const;
 
     int GetCurrentDay() const;
+    void SetCurrentDay(int day);
 
     bool GetDayTime() const;
 
     // setters
     void SetTime(int hours, int minutes, int seconds);
     void AddTime(int hours, int minutes, int seconds);
+
+    void SetClockColor(Color4f color);
 
 private:
 
@@ -47,4 +50,6 @@ private:
     Texture* m_ClockTexturePtr;
 
     bool m_DayTime;
+
+    Color4f m_ClockColor;
 };

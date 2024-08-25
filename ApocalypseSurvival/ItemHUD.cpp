@@ -6,6 +6,7 @@ ItemHUD::ItemHUD(Point2f location, std::string itemName, int initialAmount)
 	, m_ItemName{ itemName }
 	, m_CurrentItems{ initialAmount }
 	, m_ItemHudTexturePtr{ nullptr }
+	, m_TextColor{ Color4f(0.f,0.f,0.f,1.f) }
 {
 	UpdateTextureString();
 }
@@ -56,6 +57,12 @@ void ItemHUD::RemoveItemAmount(int amount)
 	UpdateTextureString();
 }
 
+void ItemHUD::SetTextColor(const Color4f& color)
+{
+	m_TextColor = color;
+	UpdateTextureString();
+}
+
 void ItemHUD::UpdateTextureString()
 {
 	std::string textureString { m_ItemName + ": " + std::to_string(m_CurrentItems) };
@@ -65,5 +72,5 @@ void ItemHUD::UpdateTextureString()
 		delete m_ItemHudTexturePtr;
 	}
 	
-	m_ItemHudTexturePtr = new Texture{ textureString,"Poxast-R9Jjl.ttf",15 ,Color4f(0.f,0.f,0.f,1.f) };
+	m_ItemHudTexturePtr = new Texture{ textureString,"Poxast-R9Jjl.ttf",15 ,m_TextColor };
 }

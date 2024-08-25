@@ -38,6 +38,36 @@ bool DayNightCycle::GetDayTime() const
     return m_ClockPtr->GetDayTime();
 }
 
+void DayNightCycle::SetTime(int hours, int minutes, int seconds)
+{
+    m_ClockPtr->SetTime(hours, minutes, seconds);
+}
+
+void DayNightCycle::SetDay(int day)
+{
+    m_ClockPtr->SetCurrentDay(day);
+}
+
+int DayNightCycle::GetHour()
+{
+    return m_ClockPtr->GetHours();
+}
+
+int DayNightCycle::GetMinutes()
+{
+    return m_ClockPtr->GetMinutes();
+}
+
+int DayNightCycle::GetSeconds()
+{
+    return m_ClockPtr->GetSeconds();
+}
+
+void DayNightCycle::SetClockColor(Color4f color)
+{
+    m_ClockPtr->SetClockColor(color);
+}
+
 void DayNightCycle::UpdateSkycolor()
 {
     int hour = m_ClockPtr->GetHours();

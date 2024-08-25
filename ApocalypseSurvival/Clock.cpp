@@ -11,6 +11,7 @@ Clock::Clock(Point2f location, float windowWidth, float windowHeight)
     , m_SecsPerInGameHour(12.5f) //12.5f
     , m_CurrentDay(1)
     , m_DayTime(true)
+    , m_ClockColor(0.f, 0.f, 0.f, 1.f)
 {
     m_TimeString = (std::to_string(m_Hours) + " : " + std::to_string(m_Minutes) + " : " + std::to_string(m_Seconds));
     m_ClockTexturePtr = new Texture{ m_TimeString, "Poxast-R9Jjl.ttf", 25, Color4f(0.f, 0.f, 0.f, 1.f) };
@@ -83,6 +84,11 @@ int Clock::GetCurrentDay() const
     return m_CurrentDay;
 }
 
+void Clock::SetCurrentDay(int day)
+{
+    m_CurrentDay = day;
+}
+
 bool Clock::GetDayTime() const
 {
     return m_DayTime;
@@ -98,7 +104,8 @@ void Clock::UpdateTimeString()
     m_TimeString = oss.str();
 
     delete m_ClockTexturePtr;
-    m_ClockTexturePtr = new Texture{ m_TimeString, "Poxast-R9Jjl.ttf", 25, Color4f(0.f, 0.f, 0.f, 1.f) };
+
+    m_ClockTexturePtr = new Texture{ m_TimeString, "Poxast-R9Jjl.ttf", 25, m_ClockColor };
 
     m_MyLocation.x = (m_WindowWidth - 180.f);
     m_MyLocation.y = (m_WindowHeight - m_ClockTexturePtr->GetHeight());
@@ -121,4 +128,9 @@ void Clock::AddTime(int hours, int minutes, int seconds)
     m_Seconds = totalSeconds % 60;
 
     UpdateTimeString();
+}
+
+void Clock::SetClockColor(Color4f color)
+{
+    m_ClockColor = color;
 }

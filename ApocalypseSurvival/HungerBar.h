@@ -17,6 +17,7 @@ public:
 
     float GetHunger() const;
 
+    void SetCurrentFoodPoints(int foodPoints);
 
 private:
 

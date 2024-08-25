@@ -57,3 +57,8 @@ float HungerBar::GetHunger() const
 {
     return m_CurrentHunger;
 }
+
+void HungerBar::SetCurrentFoodPoints(int foodPoints)
+{
+    m_CurrentHunger = foodPoints;
+}

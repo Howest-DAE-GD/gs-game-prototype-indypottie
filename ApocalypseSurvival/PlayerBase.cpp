@@ -182,6 +182,11 @@ bool PlayerBase::GetDoorInteractionPoint() const
 	return m_PlayerAtDoor;
 }
 
+bool PlayerBase::GetBedInteractionPoint() const
+{
+	return m_PlayerAtBed;
+}
+
 bool PlayerBase::GetIsPlayerInBase() const
 {
 	return m_PlayerInBase;
@@ -194,8 +199,29 @@ bool PlayerBase::GetIsFireOn() const
 
 void PlayerBase::RemoveFood(int amount)
 {
+	if (m_StoredFood <= 0) return;
+
 	m_StoredFood -= amount;
 	m_FoodStoredHUD->RemoveItemAmount(amount);
+}
+
+void PlayerBase::RemoveWood(int amount)
+{
+	if (m_FuelLeft <= 0) return;
+
+	m_FuelLeft -= amount;
+	m_CurrentFuelHUD->RemoveItemAmount(amount);
+}
+
+Point2f PlayerBase::GetCenterPoint() const
+{
+	return Point2f{ m_MyLocation.x + (m_MyTexturePtr->GetWidth() / 2.f), m_MyLocation.y + (m_MyTexturePtr->GetHeight() / 2.f) };
+}
+
+void PlayerBase::SetInventoryColor(Color4f color)
+{
+	m_CurrentFuelHUD->SetTextColor(color);
+	m_FoodStoredHUD->SetTextColor(color);
 }
 
 void PlayerBase::InitializePoints()

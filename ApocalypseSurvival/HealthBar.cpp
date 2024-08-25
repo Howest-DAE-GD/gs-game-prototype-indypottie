@@ -24,8 +24,6 @@ void HealthBar::Draw() const
 
 	utils::FillRect(healthRect);
 
-
-
 	healthRect.width = m_MaxHealth;
 
 	utils::SetColor(Color4f(0.0f, 0.0f, 0.0f, 1.f));

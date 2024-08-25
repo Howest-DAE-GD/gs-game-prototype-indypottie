@@ -6,6 +6,7 @@ Player::Player(Point2f location, std::string filePath, Point2f baseLocation)
 	, m_BaseLocation(baseLocation)
 	, m_MySpeed(100.f, 100.f)
 	, m_Dead(false)
+	, m_StopHealing(false)
 {
 	Point2f healthBarLocation{ 5.f, 470.f };
 	m_HealthBarPtr = new HealthBar(healthBarLocation, 100.f);
@@ -134,6 +135,11 @@ void Player::ProcessKeyDownEvent(const SDL_KeyboardEvent& e)
 void Player::TakeDamage(float damagePoints)
 {
 	m_HealthBarPtr->DamageHealth(damagePoints);
+
+	if (m_HealthBarPtr->GetCurrentHealth() <= 0)
+	{
+		SetIsDead(true);
+	}
 }
 
 void Player::RestoreHealth(float healingPoints)
@@ -237,6 +243,32 @@ void Player::GiveFood(int amount)
 		m_Inventory.push_back(Pickup::PickupType::food);
 		m_FoodInventoryPtr->IncreaseItem();
 	}
+}
+
+void Player::SetFoodPoints(int foodPoints)
+{
+	m_HungerBarPtr->SetCurrentFoodPoints(foodPoints);
+}
+
+Point2f Player::GetCenterPoint() const
+{
+	return Point2f{ m_MyLocation.x + (m_MyTexturePtr->GetWidth() / 2.f), m_MyLocation.y + (m_MyTexturePtr->GetHeight() / 2.f) };
+}
+
+void Player::SetIsDead(bool isDead)
+{
+	m_Dead = isDead;
+}
+
+bool Player::GetIsDead()
+{
+	return m_Dead;
+}
+
+void Player::SetInventoryColor(const Color4f& color)
+{
+	m_FoodInventoryPtr->SetTextColor(color);
+	m_WoodInventoryPtr->SetTextColor(color);
 }
 
 void Player::UpdateMovement(float elapsedSec)
